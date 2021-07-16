@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafanadeploy
+  labels:
+    app: grafanadeploy
+spec:
+  selector:
+    matchLabels:
+      project: grafana-pod-proj
+  template:
+    metadata:
+      labels:
+        project: grafana-pod-proj
+    spec:
+      containers:
+      - name: grafana-pod
+        image: grafana
+        imagePullPolicy: Never
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana-service
+  annotations:
+    metallb.universe.tf/allow-shared-ip: ipps
+  labels:
+    owner: hhanh
+spec:
+  type: LoadBalancer
+  selector:
+    project: grafana-pod-proj
+  ports:
+  - port: 3000
+    targetPort: 3000

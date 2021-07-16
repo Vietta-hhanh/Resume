@@ -1,0 +1,42 @@
+apiVersion : apps/v1
+kind : Deployment
+metadata:
+  name: phpmyadmindeploy
+  labels:
+    app : phpmyadmindeploy
+spec:
+  selector:
+    matchLabels:
+      project: php-pod-proj
+  template:
+    metadata:
+      labels:
+        project: php-pod-proj
+    spec:
+      containers:
+       - name: phpmyadminpod
+         image: phpmyadmin 
+         imagePullPolicy: Never
+         ports:
+         - name: http
+           containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: phpmyadmin-service
+  labels:
+    env: loadbalancer
+    owner: hhanh
+  annotations:
+    metallb.universe.tf/allow-shared-ip: ipps
+spec:
+  type: LoadBalancer
+  selector:
+    project: php-pod-proj
+  ports:
+  - name: http
+    protocol: TCP
+    port: 5000
+    targetPort: 5000
+  type: LoadBalancer

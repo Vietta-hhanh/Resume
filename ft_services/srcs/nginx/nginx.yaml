@@ -1,0 +1,48 @@
+apiVersion : apps/v1
+kind : Deployment
+metadata:
+  name: nginxdeploy
+  labels:
+    app : nginxdeploy
+spec:
+  selector:
+    matchLabels:
+      project: nginx-pod-proj
+  template:
+    metadata:
+      labels:
+        project: nginx-pod-proj
+    spec:
+      containers:
+       - name: nginx-pod
+         image: nginx
+         imagePullPolicy: Never
+         ports:
+         - name: http
+           containerPort: 80
+         - name: https
+           containerPort: 443
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  labels:
+    env: loadbalancer
+    owner: hhanh
+  annotations:
+    metallb.universe.tf/allow-shared-ip: ipps
+spec:
+  type: LoadBalancer
+  selector:
+    project: nginx-pod-proj
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 80
+  - name: https
+    protocol: TCP
+    port: 443
+    targetPort: 443
+  type: LoadBalancer
