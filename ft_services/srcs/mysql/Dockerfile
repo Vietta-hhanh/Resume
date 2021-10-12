@@ -15,4 +15,4 @@ COPY telegraf.conf /etc/
 COPY hhanhbase.sql .
 
 
-CMD ./start.sh
+CMD sh ./start.sh
