@@ -18,4 +18,4 @@ COPY supervisord.conf /etc/
 COPY telegraf.conf /etc/
 
 
-CMD ./start.sh 
+CMD sh ./start.sh 
